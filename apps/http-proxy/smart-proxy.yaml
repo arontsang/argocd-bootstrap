@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-proxy
+  labels:
+    app: smart-proxy
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smart-proxy
+  template:
+    metadata:
+      labels:
+        app: smart-proxy
+    spec:
+      containers:
+        - name: smart-proxy
+          image: saucelabs/forwarder
+          ports:
+            - containerPort: 3128
+            - containerPort: 10000
+          resources:
+            limits:
+              memory: 64Mi
+              cpu: 500m
+            requests:
+              memory: 64Mi
+              cpu: 10m
+          env:
+            - name: FORWARDER_ADDRESS
+              value: ":3128"
+            - name: FORWARDER_PAC
+              value: "http://wpad.wpad.kube/wpad.dat"
+            - name: FORWARDER_LOG_HTTP
+              value: "short-url" 
+            - name: FORWARDER_API_ADDRESS
+              value: ":10000" 
+            - name: FORWARDER_LOG_LEVEL
+              value: "info" 
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 10000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: smart-proxy
+spec:
+  ipFamilies:
+   - IPv6
+   - IPv4
+  ports:
+    - protocol: TCP
+      port: 3128
+      targetPort: 3128
+      name: smart-proxy
+    - protocol: TCP
+      port: 80
+      targetPort: 10000
+      name: admin
+  selector:
+    app: smart-proxy
+  type: LoadBalancer
+  ipFamilyPolicy: PreferDualStack
+  externalTrafficPolicy: Cluster
+
