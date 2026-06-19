@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: argocd-cm
 data:
+  exec.enabled: "true" # Enables the terminal feature globally
+  exec.shells: "bash,sh" # Optional: Ordered list of shells to try
   kustomize.buildOptions: --enable-helm
   configManagementPlugins: |
     - name: kustomized-helm
