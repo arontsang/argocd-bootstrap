@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wpad
+  labels:
+    app: wpad
+spec:
+  revisionHistoryLimit: 3
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wpad
+  template:
+    metadata:
+      labels:
+        app: wpad
+    spec:
+      containers:
+        - name: wpad
+          image: public.ecr.aws/nginx/nginx:alpine-slim
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/wpad.dat
+              name: script
+              subPath: wpad.js
+          resources:
+            limits:
+              memory: 8Mi
+              cpu: 100m
+            requests:
+              memory: 8Mi
+              cpu: 10m
+          livenessProbe:
+            httpGet:
+              path: /wpad.dat
+              port: 80
+      volumes:
+       - name: script
+         configMap:
+           name: script

@@ -1,0 +1,80 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: uk-proxy
+spec:
+  ipFamilies:
+   - IPv4
+  ports:
+    - protocol: TCP
+      port: 3128
+      targetPort: 3128
+      name: http
+  selector:
+    app: uk-proxy
+  type: LoadBalancer
+  ipFamilyPolicy: SingleStack
+  externalTrafficPolicy: Cluster
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uk-proxy
+spec:
+  revisionHistoryLimit: 3
+  replicas: 2
+  selector:
+    matchLabels:
+      app: uk-proxy
+  template:
+    metadata:
+      annotations:
+        cni.projectcalico.org/ipv6pools: '["public-ipv6-pool"]'
+      labels:
+        app: uk-proxy
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - fake
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: uk-proxy
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: socat
+        securityContext:
+          allowPrivilegeEscalation: false
+        env:
+          - name: SERVER_ADDR
+            value: https://d9a3efd2b48745ea8180dafb6f9deda7.nicegrass-a1e7b9c1.uksouth.azurecontainerapps.io/
+          - name: PROXY_PORT
+            value: "3128"
+          # 16 MB Send/Recv Window (Bandwidth latency product) 
+          # should allow for 128Mb/s with a latency of 1 second
+          - name: QUIC_SEND_WINDOW
+            value: "16777216"
+          - name: QUIC_RECV_WINDOW
+            value: "16777216"
+
+          # Force IPv4
+          # - name: BIND_ADDR
+          #   value: "[::]:0"
+        #image: ghcr.io/arontsang/socat-curl-proxy:latest
+        image: ghcr.io/arontsang/iroh-vpn-proxy/client:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3128
