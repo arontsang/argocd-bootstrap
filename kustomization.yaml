@@ -3,5 +3,13 @@ kind: Kustomization
 
 resources:
   - ./00-bootstrap.yaml
-  - ./00-kustomize-helm.yaml  
-  - https://raw.githubusercontent.com/argoproj/argo-cd/refs/tags/stable/manifests/install.yaml  
+  - ./00-kustomize-helm.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/refs/tags/stable/manifests/install.yaml
+
+patches:
+  - target:
+      kind: ConfigMap
+      name: argocd-cm
+    patch: |-
+      data:
+        kustomize.buildOptions: --enable-helm  
