@@ -44,6 +44,17 @@ spec:
             httpGet:
               path: /healthz
               port: 10000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 10000
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 10000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 30
 ---
 kind: Service
 apiVersion: v1
