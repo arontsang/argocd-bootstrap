@@ -23,7 +23,7 @@ jobs:
           kustomize build . | \
             sed 's|${REPO_URL}|https://github.com/${{ github.repository }}|g' | \
             sed 's|${TARGET_REF}|${{ github.ref_name }}|g' | \
-            tee -a 00-bootstrap.yaml
+            tee deploy.yaml
 
       - name: Delete old release and tag
         if: github.event_name == 'push'
@@ -36,7 +36,7 @@ jobs:
         if: github.event_name == 'push'
         with:
           name: ${{ github.ref_name }}
-          files: 00-bootstrap.yaml
+          files: deploy.yaml
           tag_name: ${{ github.ref_name }}
           prerelease: true
           make_latest: true
