@@ -16,8 +16,8 @@ spec:
     spec:
       project: default
       source:
-        repoURL: 'https://github.com'
-        targetRevision: HEAD
+        repoURL: '${REPO_URL}'
+        targetRevision: '${TARGET_REF}'
         path: '{{path}}' # Resolves to the specific directory found by the wildcard
       destination:
         server: 'https://kubernetes.default.svc'
