@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 00-bootstrap
+  name: 00-kustomized-helm
   namespace: argocd
 spec:
   project: default
@@ -9,8 +9,10 @@ spec:
     repoURL: https://github.com/argoproj/argocd-example-apps
     targetRevision: 8088f4c
     path: plugins/kustomized-helm
+    plugin:
+      name: kustomized-helm 
   destination:
-    server: 'https://default.svc'
+    server: 'https://kubernetes.default.svc'
     namespace: argocd
   syncPolicy:
     automated:
