@@ -15,6 +15,7 @@ metadata:
   name: home-assistant
   labels:
     kubernetes.io/service-name: home-assistant
+    endpointslice.kubernetes.io/managed-by: "manual" 
 addressType: IPv4
 ports:
   - protocol: TCP
