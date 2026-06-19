@@ -1,0 +1,92 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: smarthome
+spec:
+  privateKey:
+    rotationPolicy: Always
+  secretName: smarthome-traefik-tls        # <===  Name of secret where the generated certificate will be stored.
+  dnsNames:
+    - "smarthome.arontsang.com"
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: smarthome
+spec:
+  ipFamilies:
+   - IPv6
+   - IPv4
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 443
+      name: https
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
+  selector:
+    app: smarthome
+  type: LoadBalancer
+  ipFamilyPolicy: PreferDualStack
+  externalTrafficPolicy: Local
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smarthome-caddy
+data:
+  Caddyfile: |
+    smarthome.arontsang.com {
+      tls /secret/tls.crt /secret/tls.key
+      handle  /.well-known/acme-challenge/* {
+         reverse_proxy 172.20.8.11:80
+      }
+      handle {
+         reverse_proxy 172.20.3.57:8123
+      }
+    }
+---
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smarthome
+  labels:
+    app: smarthome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smarthome
+  template:
+    metadata:
+      labels:
+        app: smarthome
+    spec:
+      containers:
+        - name: caddy
+          image: caddy:2.8.4-alpine
+          ports:
+            - containerPort: 443
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/caddy
+              name: config
+            - mountPath: /secret
+              name: tls
+          resources:
+            limits:
+              memory: 64Mi
+              cpu: 500m
+      volumes:
+       - name: config
+         configMap:
+           name: smarthome-caddy
+       - name: tls
+         secret:
+           secretName: smarthome-traefik-tls

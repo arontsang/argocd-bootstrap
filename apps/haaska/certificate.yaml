@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: haaska
+spec:
+  privateKey:
+    rotationPolicy: Always
+  secretName: haaska-traefik-tls
+  dnsNames:
+    - "haaska.arontsang.com"
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

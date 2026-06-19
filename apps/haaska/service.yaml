@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: haaska
+spec:
+  ipFamilies:
+   - IPv6
+   - IPv4
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      name: http
+  selector:
+    app: auth-proxy
+  type: LoadBalancer
+  ipFamilyPolicy: PreferDualStack
+  externalTrafficPolicy: Local

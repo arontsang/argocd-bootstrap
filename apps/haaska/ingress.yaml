@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: haaska
+spec:
+  ingressClassName: traefik
+  tls:
+    - secretName: haaska-traefik-tls
+  rules:
+  - host: haaska.arontsang.com
+    http:
+      paths:
+      - path: /auth/token
+        pathType: Prefix
+        backend:
+          service:
+            name: home-assistant
+            port:
+              number: 80
+      - path: /api/alexa/smart_home
+        pathType: Prefix
+        backend:
+          service:
+            name: home-assistant
+            port:
+              number: 80
