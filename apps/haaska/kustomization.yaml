@@ -5,7 +5,6 @@ resources:
   - certificate.yaml
   - home-assistant.yaml
   - ingress.yaml
-  - issuer.yaml
   - namespace.yaml
   - service.yaml
   - smarthome.yaml
