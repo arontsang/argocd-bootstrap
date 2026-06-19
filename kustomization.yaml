@@ -4,7 +4,6 @@ namespace: argocd
 resources:
   - https://raw.githubusercontent.com/argoproj/argo-cd/refs/tags/stable/manifests/install.yaml
   - ./00-bootstrap.yaml
-  - ./00-kustomize-helm.yaml
   - ./namespace.yaml
 
 patches:
