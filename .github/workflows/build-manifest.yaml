@@ -1,0 +1,48 @@
+name: Build Manifest
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: alexellis/setup-arkade@v3
+      - run: arkade get kustomize
+      - run: sudo mv $HOME/.arkade/bin/kustomize /usr/local/bin/
+
+      - run: |
+          kustomize build . | \
+            sed 's|${REPO_URL}|https://github.com/${{ github.repository }}|g' | \
+            sed 's|${TARGET_REF}|${{ github.ref_name }}|g' | \
+            tee -a 00-bootstrap.yaml
+
+      - name: Delete old release and tag
+        if: github.event_name == 'push'
+        run: |
+          gh release delete ${{ github.ref_name }} --yes --cleanup-tag || true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push'
+        with:
+          name: ${{ github.ref_name }}
+          files: 00-bootstrap.yaml
+          tag_name: ${{ github.ref_name }}
+          prerelease: true
+          make_latest: true
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: bootstrap.yaml
+          path: 00-bootstrap.yaml
