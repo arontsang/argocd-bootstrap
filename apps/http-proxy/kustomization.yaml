@@ -6,6 +6,7 @@ resources:
   - smart-proxy.yaml
   - uk-proxy.yaml
   - wpad.yaml
+  - rollout-restart-cronjob.yaml
 configMapGenerator:
   - name: script
     files: 
