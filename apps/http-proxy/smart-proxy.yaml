@@ -32,7 +32,7 @@ spec:
             - name: FORWARDER_ADDRESS
               value: ":3128"
             - name: FORWARDER_PAC
-              value: "http://wpad.wpad.kube/wpad.dat"
+              value: "http://wpad.http-proxy.kube/wpad.dat"
             - name: FORWARDER_LOG_HTTP
               value: "short-url" 
             - name: FORWARDER_API_ADDRESS
