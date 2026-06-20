@@ -50,3 +50,27 @@ spec:
                 - deployment/smart-proxy
                 - -n
                 - http-proxy
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rollout-restart-uk-proxy
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: rollout-restarter
+          restartPolicy: Never
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl:latest
+              command:
+                - kubectl
+                - rollout
+                - restart
+                - deployment/uk-proxy
+                - -n
+                - http-proxy
