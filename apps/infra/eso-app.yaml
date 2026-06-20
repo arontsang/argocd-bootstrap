@@ -15,6 +15,9 @@ spec:
       values: |
         revisionHistoryLimit: 4
         installCRDs: true
+        serviceAccount:
+          annotations:
+            "azure.workload.identity/client-id": bd9dcb96-da6a-4c7d-ba19-e9fe28667eaf
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: external-secrets
