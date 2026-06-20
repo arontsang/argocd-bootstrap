@@ -13,18 +13,39 @@ spec:
     helm:
       releaseName: external-secrets
       values: |
+
         revisionHistoryLimit: 4
         installCRDs: true
         serviceAccount:
           annotations:
-            "azure.workload.identity/client-id": bd9dcb96-da6a-4c7d-ba19-e9fe28667eaf
+            "azure.workload.identity/client-id": 921f9e20-c43a-442c-9905-c8dc5c4bcbe2
+        # certController:
+        #   create: true
+        # webhook:
+        #   create: true
+        #   certManager:
+        #     enabled: true
+        #     addWithClusterRole: true
+        secretAnnotations:
+            argocd.argoproj.io/compare-options: IgnoreExtraneous
+            argocd.argoproj.io/sync-options: Prune=false
+        replicaCount: 1
+
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: external-secrets
   syncPolicy:
     automated:
-      prune: true 
-      selfHeal: true
+      prune: false 
+      selfHeal: false
     syncOptions:
       - CreateNamespace=true
       - Replace=true  
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: my-issuer
+  namespace: external-secrets
+spec:
+  selfSigned: {}
