@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ipsec-certificate
+spec:
+  privateKey:
+    rotationPolicy: Always
+  secretName: ipsec-certificate
+  dnsNames:
+    - "ipsec.arontsang.com"
+  issuerRef:
+    name: cloudflare-letsencrypt-prod
+    kind: ClusterIssuer

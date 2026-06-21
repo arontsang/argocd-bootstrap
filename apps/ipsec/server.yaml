@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scp-server
+  namespace: ipsec
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scp-server
+  template:
+    metadata:
+      # annotations:
+      #   cni.projectcalico.org/ipv6pools: '["public-ipv6-pool"]'
+      labels:
+        app: scp-server
+    spec:
+      # securityContext:
+      #   runAsUser: 1000
+      #   runAsGroup: 1000
+      #   fsGroup: 1000
+      containers:
+      - name: dropbear
+        securityContext:
+          allowPrivilegeEscalation: false
+        env:
+          - name: SCP_USER
+            value: ubnt
+          - name: SSH_PUBLIC_KEY
+            value: |
+              ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhQ0XTafeKg3Z/3yWq52/Jt8NeVKpOa8hw1M3g8xBkF aron@DESKTOP-RD136KU
+        image: ghcr.io/arontsang/container/dropbear:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 22
+        volumeMounts:
+        - name: dropbear-config-tmp
+          mountPath: /etc/dropbear/
+        - name: home
+          mountPath: /home/ubnt/
+        - name: cert-volume
+          mountPath: /home/ubnt/cert/
+      volumes:
+      - name: dropbear-config-tmp
+        emptyDir:
+          medium: Memory   
+      - name: home
+        emptyDir:
+          medium: Memory      
+      - name: cert-volume
+        secret:
+          secretName: ipsec-certificate
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: scp-server
+  namespace: ipsec
+spec:
+  ipFamilies:
+   - IPv4
+  ports:
+    - protocol: TCP
+      port: 22
+      targetPort: 22
+      name: ssh
+  selector:
+    app: scp-server
+  type: LoadBalancer
+  ipFamilyPolicy: SingleStack
+  externalTrafficPolicy: Cluster
