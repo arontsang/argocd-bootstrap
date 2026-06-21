@@ -11,3 +11,6 @@ spec:
   issuerRef:
     name: cloudflare-letsencrypt-prod
     kind: ClusterIssuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
