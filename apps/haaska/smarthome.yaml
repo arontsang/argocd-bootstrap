@@ -5,11 +5,11 @@ metadata:
 spec:
   privateKey:
     rotationPolicy: Always
-  secretName: smarthome-traefik-tls        # <===  Name of secret where the generated certificate will be stored.
+  secretName: smarthome-traefik-tls
   dnsNames:
     - "smarthome.arontsang.com"
   issuerRef:
-    name: letsencrypt-prod
+    name: cloudflare-letsencrypt-prod
     kind: ClusterIssuer
 ---
 kind: Service
