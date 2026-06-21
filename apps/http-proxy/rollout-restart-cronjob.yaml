@@ -33,7 +33,7 @@ kind: CronJob
 metadata:
   name: rollout-restart-smart-proxy
 spec:
-  schedule: "0 * * * *"
+  schedule: "0/5 * * * *"
   jobTemplate:
     spec:
       template:
