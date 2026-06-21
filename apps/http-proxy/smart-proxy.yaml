@@ -50,20 +50,29 @@ spec:
               value: "info" 
 
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 10000
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: 10000
-          startupProbe:
-            httpGet:
-              path: /healthz
-              port: 10000
-            initialDelaySeconds: 5
+            exec:
+              command:
+                - forwarder
+                - ready
             periodSeconds: 5
-            failureThreshold: 30
+            timeoutSeconds: 2
+            failureThreshold: 2
+          readinessProbe:
+            exec:
+              command:
+                - forwarder
+                - ready
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
+          startupProbe:
+            exec:
+              command:
+                - forwarder
+                - ready
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
 ---
 kind: Service
 apiVersion: v1
