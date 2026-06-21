@@ -23,10 +23,10 @@ spec:
             - containerPort: 10000
           resources:
             limits:
-              memory: 64Mi
+              memory: 128Mi
               cpu: 500m
             requests:
-              memory: 64Mi
+              memory: 128Mi
               cpu: 10m
           env:
             - name: FORWARDER_ADDRESS
