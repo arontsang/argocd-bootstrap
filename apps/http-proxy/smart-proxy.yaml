@@ -26,7 +26,7 @@ spec:
                 - unraid-k8s
       containers:
         - name: smart-proxy
-          image: saucelabs/forwarder
+          image: ghcr.io/arontsang/container/pac-proxy:latest
           ports:
             - containerPort: 3128
             - containerPort: 10000
@@ -52,26 +52,20 @@ spec:
               value: "info" 
 
           livenessProbe:
-            exec:
-              command:
-                - forwarder
-                - ready
+            tcpSocket:
+              port: 3128
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 2
           readinessProbe:
-            exec:
-              command:
-                - forwarder
-                - ready
+            tcpSocket:
+              port: 3128
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 2
           startupProbe:
-            exec:
-              command:
-                - forwarder
-                - ready
+            tcpSocket:
+              port: 3128
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 2
