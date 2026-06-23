@@ -26,22 +26,20 @@ spec:
                 - unraid-k8s
       containers:
         - name: smart-proxy
-          image: ghcr.io/arontsang/container/pac-proxy:latest
+          image: saucelabs/forwarder
           ports:
             - containerPort: 3128
             - containerPort: 10000
           resources:
             limits:
-              memory: 256Mi
-              cpu: 1000m
+              memory: 128Mi
+              cpu: 500m
             requests:
-              memory: 256Mi
+              memory: 128Mi
               cpu: 10m
           env:
             - name: FORWARDER_ADDRESS
               value: ":3128"
-            - name: PROXYPACPROXY_URL
-              value: http://wpad.http-proxy.kube/wpad.dat
             - name: FORWARDER_PAC
               value: "http://wpad.http-proxy.kube/wpad.dat"
             - name: FORWARDER_LOG_HTTP
@@ -52,23 +50,29 @@ spec:
               value: "info" 
 
           livenessProbe:
-            tcpSocket:
-              port: 3128
+            exec:
+              command:
+                - forwarder
+                - ready
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 2
           readinessProbe:
-            tcpSocket:
-              port: 3128
+            exec:
+              command:
+                - forwarder
+                - ready
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 2
           startupProbe:
-            tcpSocket:
-              port: 3128
+            exec:
+              command:
+                - forwarder
+                - ready
             periodSeconds: 5
             timeoutSeconds: 2
-            failureThreshold: 5
+            failureThreshold: 2
 ---
 kind: Service
 apiVersion: v1
@@ -92,4 +96,3 @@ spec:
   type: LoadBalancer
   ipFamilyPolicy: PreferDualStack
   externalTrafficPolicy: Cluster
-
