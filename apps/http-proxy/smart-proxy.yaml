@@ -40,6 +40,8 @@ spec:
           env:
             - name: FORWARDER_ADDRESS
               value: ":3128"
+            - name: PROXYPACPROXY_URL
+              value: http://wpad.http-proxy.kube/wpad.dat
             - name: FORWARDER_PAC
               value: "http://wpad.http-proxy.kube/wpad.dat"
             - name: FORWARDER_LOG_HTTP
