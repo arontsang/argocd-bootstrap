@@ -68,7 +68,7 @@ spec:
               port: 3128
             periodSeconds: 5
             timeoutSeconds: 2
-            failureThreshold: 2
+            failureThreshold: 5
 ---
 kind: Service
 apiVersion: v1
