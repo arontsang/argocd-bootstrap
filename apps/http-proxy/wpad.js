@@ -76,16 +76,16 @@ function FindProxyForURL(url, host) {
         return "PROXY uk-proxy.http-proxy.kube:3128";
     }
 
-    //Cruncy Roll
-    if (dnsDomainIs(host, ".crunchyroll.com") || host === "crunchyroll.com") {
-        return "PROXY uk-proxy.http-proxy.kube:3128";
-    }
-    if (dnsDomainIs(host, ".ketchcdn.com") || host === "ketchcdn.com") {
-        return "PROXY uk-proxy.http-proxy.kube:3128";
-    }
-    if (host === "geolocation.onetrust.com") {
-        return "PROXY uk-proxy.http-proxy.kube:3128";
-    }
+    // //Cruncy Roll
+    // if (dnsDomainIs(host, ".crunchyroll.com") || host === "crunchyroll.com") {
+    //     return "PROXY uk-proxy.http-proxy.kube:3128";
+    // }
+    // if (dnsDomainIs(host, ".ketchcdn.com") || host === "ketchcdn.com") {
+    //     return "PROXY uk-proxy.http-proxy.kube:3128";
+    // }
+    // if (host === "geolocation.onetrust.com") {
+    //     return "PROXY uk-proxy.http-proxy.kube:3128";
+    // }
 
     //ChatGPT
     if (dnsDomainIs(host, ".chatgpt.com") || host === "chatgpt.com") {
