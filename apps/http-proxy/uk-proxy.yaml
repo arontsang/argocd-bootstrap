@@ -10,6 +10,10 @@ spec:
       port: 3128
       targetPort: 3128
       name: http
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: azure
   selector:
     app: uk-proxy
   type: LoadBalancer
@@ -55,12 +59,12 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-      - name: socat
+      - name: proxy
         securityContext:
           allowPrivilegeEscalation: false
         env:
           - name: SERVER_ADDR
-            value: https://d9a3efd2b48745ea8180dafb6f9deda7.nicegrass-a1e7b9c1.uksouth.azurecontainerapps.io/
+            value: http://localhost:8080/
           - name: PROXY_PORT
             value: "3128"
           # 16 MB Send/Recv Window (Bandwidth latency product) 
@@ -78,3 +82,34 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 3128
+      - name: caddy
+        image: caddy:2-alpine
+        ports:
+        - containerPort: 8080
+        command: ["sh", "-c"]
+        args:
+          - |
+            cat <<EOF | caddy run --adapter caddyfile --config -
+            :8080 {
+                reverse_proxy https://d9a3efd2b48745ea8180dafb6f9deda7.nicegrass-a1e7b9c1.uksouth.azurecontainerapps.io {
+                    header_up Host {upstream_hostport}
+                    
+                    # Reads the token file from disk dynamically on every HTTP request
+                    header_up Authorization "Bearer {file./var/run/secrets/tokens/azure-token}"
+                }
+            }
+            EOF
+        volumeMounts:
+        # Mount the projected token volume into the Caddy container
+        - name: azure-token
+          mountPath: /var/run/secrets/tokens/azure-token
+          readOnly: true
+          subPath: k8s-auth-token
+      volumes:
+        - name: azure-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: "api://azure"
+                  expiration: 3600
+                  path: k8s-auth-token
