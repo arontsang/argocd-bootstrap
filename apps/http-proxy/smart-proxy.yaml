@@ -88,6 +88,10 @@ spec:
       targetPort: 3128
       name: smart-proxy
     - protocol: TCP
+      port: 1080
+      targetPort: 3128
+      name: smart-proxy-2
+    - protocol: TCP
       port: 80
       targetPort: 10000
       name: admin
