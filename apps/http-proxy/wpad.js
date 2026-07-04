@@ -75,6 +75,9 @@ function FindProxyForURL(url, host) {
     if (shExpMatch(host, "itvpnp.*")) {
         return "PROXY uk-proxy.http-proxy.kube:3128";
     }
+    if (host === "license.theoplayer.com"){
+        return "PROXY uk-proxy.http-proxy.kube:3128";
+    }
 
     // //Cruncy Roll
     // if (dnsDomainIs(host, ".crunchyroll.com") || host === "crunchyroll.com") {
