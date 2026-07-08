@@ -61,7 +61,11 @@ function FindProxyForURL(url, host) {
     if (host === "bbcandroid.2cnt.net" ) {
         return "PROXY uk-proxy.http-proxy.kube:3128";
     }
+    if (host === "fwc26-bbc-prod.r2.immersiv.cloud" ) {
+        return "PROXY uk-proxy.http-proxy.kube:3128";
+    }
 
+    
 
     if (dnsDomainIs(host, ".skycdp.com")) {
         return "PROXY uk-proxy.http-proxy.kube:3128";
