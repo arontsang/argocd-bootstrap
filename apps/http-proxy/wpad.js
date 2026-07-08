@@ -3,6 +3,13 @@ function FindProxyForURL(url, host) {
         return "DIRECT";
     }
 
+    // Amazon UK
+    if (dnsDomainIs(host, ".amazon.co.uk") || host === "amazon.co.uk") {
+        return "DIRECT";
+    }
+
+
+    
     if (host === "junie.jetbrains.com") {
         return "PROXY uk-proxy.http-proxy.kube:3128";
     }
