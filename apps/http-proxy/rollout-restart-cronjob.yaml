@@ -59,6 +59,7 @@ kind: CronJob
 metadata:
   name: rollout-restart-uk-proxy
 spec:
+  suspend: true
   startingDeadlineSeconds: 10
   concurrencyPolicy: Forbid
   schedule: "0 3 * * *"
