@@ -36,9 +36,9 @@ function FindProxyForURL(url, host) {
     if (host === "vod-dash-uk-live.akamaized.net" || host == "vod-thumb-uk-live.akamaized.net") {
         return "PROXY uk-proxy.http-proxy.kube:3128";
     }
-    if (dnsDomainIs(host, ".devices.a2z.com")) {
-        return "PROXY uk-proxy.http-proxy.kube:3128";
-    }
+    // if (dnsDomainIs(host, ".devices.a2z.com")) {
+    //     return "PROXY uk-proxy.http-proxy.kube:3128";
+    // }
     if (dnsDomainIs(host, ".uk")) {
         return "PROXY uk-proxy.http-proxy.kube:3128";
     }
