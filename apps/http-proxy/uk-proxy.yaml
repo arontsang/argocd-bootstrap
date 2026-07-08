@@ -82,7 +82,7 @@ spec:
           # - name: BIND_ADDR
           #   value: "[::]:0"
         #image: ghcr.io/arontsang/socat-curl-proxy:latest
-        image: ghcr.io/arontsang/iroh-vpn-proxy/client:latest
+        image: ghcr.io/arontsang/iroh-vpn-proxy/client:idle-timeout
         imagePullPolicy: Always
         ports:
         - containerPort: 3128
