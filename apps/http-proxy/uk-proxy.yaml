@@ -42,6 +42,13 @@ spec:
       labels:
         app: uk-proxy
     spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: ScheduleAnyway  # Soft constraint prevents pods from getting stuck if a node drops
+        labelSelector:
+          matchLabels:
+            app: uk-proxy
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
