@@ -68,6 +68,13 @@ spec:
       labels:
         app: smarthome
     spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: ScheduleAnyway  # Soft constraint prevents pods from getting stuck if a node drops
+        labelSelector:
+          matchLabels:
+            app: uk-proxy
       containers:
         - name: caddy
           image: caddy:2.8.4-alpine
