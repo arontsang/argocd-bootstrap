@@ -15,6 +15,13 @@ spec:
       labels:
         app: wpad
     spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: ScheduleAnyway  # Soft constraint prevents pods from getting stuck if a node drops
+        labelSelector:
+          matchLabels:
+            app: uk-proxy
       containers:
         - name: wpad
           image: public.ecr.aws/nginx/nginx:alpine-slim
