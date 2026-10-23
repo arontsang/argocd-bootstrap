@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webhook
+spec:
+  ingressClassName: traefik
+  tls:
+    - secretName: argocd-webhook-tls
+  rules:
+  - host: argocd.arontsang.com
+    http:
+      paths:
+      - path: /api/webhook
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80

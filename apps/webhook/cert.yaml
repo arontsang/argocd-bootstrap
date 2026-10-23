@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd-webhook-tls
+spec:
+  privateKey:
+    rotationPolicy: Always
+  secretName: argocd-webhook-tls
+  dnsNames:
+    - "argocd.arontsang.com"
+  issuerRef:
+    name: cloudflare-letsencrypt-prod
+    kind: ClusterIssuer
