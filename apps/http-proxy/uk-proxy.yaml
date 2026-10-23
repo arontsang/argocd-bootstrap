@@ -106,11 +106,23 @@ spec:
         ports:
         - containerPort: 8080
         command: ["sh", "-c"]
+        # args:
+        #   - |
+        #     cat <<EOF | caddy run --adapter caddyfile --config -
+        #     :8080 {
+        #         reverse_proxy https://d9a3efd2b48745ea8180dafb6f9deda7.nicegrass-a1e7b9c1.uksouth.azurecontainerapps.io {
+        #             header_up Host {upstream_hostport}
+                    
+        #             # Reads the token file from disk dynamically on every HTTP request
+        #             header_up Authorization "Bearer {file./var/run/secrets/tokens/azure-token}"
+        #         }
+        #     }
+        #     EOF
         args:
           - |
             cat <<EOF | caddy run --adapter caddyfile --config -
             :8080 {
-                reverse_proxy https://d9a3efd2b48745ea8180dafb6f9deda7.nicegrass-a1e7b9c1.uksouth.azurecontainerapps.io {
+                reverse_proxy https://18baa72f-3f70-4841-801c-5ef594932501-b0azcqbbcag7fpdx.uksouth-01.azurewebsites.net {
                     header_up Host {upstream_hostport}
                     
                     # Reads the token file from disk dynamically on every HTTP request
