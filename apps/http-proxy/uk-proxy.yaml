@@ -122,21 +122,20 @@ spec:
                     header_up Host {upstream_hostport}
                     
                     # Reads the token file from disk dynamically on every HTTP request
-                    header_up Authorization "Bearer {file./var/run/secrets/tokens/azure-token}"
+                    header_up Authorization "Bearer {file./opt/secrets/tokens/azure-token}"
                 }
             }
             EOF
         volumeMounts:
         # Mount the projected token volume into the Caddy container
-        - name: azure-token
-          mountPath: /var/run/secrets/tokens/azure-token
+        - name: tokens
+          mountPath: /opt/secrets/tokens/
           readOnly: true
-          subPath: k8s-auth-token
       volumes:
-        - name: azure-token
+        - name: tokens
           projected:
             sources:
               - serviceAccountToken:
                   audience: "api://azure"
-                  expiration: 300
-                  path: k8s-auth-token
+                  expirationSeconds: 3600
+                  path: azure-token
