@@ -131,5 +131,5 @@ spec:
             sources:
               - serviceAccountToken:
                   audience: "api://azure"
-                  expiration: 3600
+                  expiration: 300
                   path: k8s-auth-token
