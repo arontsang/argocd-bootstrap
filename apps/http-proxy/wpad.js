@@ -34,7 +34,10 @@ function FindProxyForURL(url, host) {
     if (dnsDomainIs(host, ".anthropic.com") || host === "anthropic.com") {
         return "PROXY uk-proxy.http-proxy.kube:3128";
     }
-
+    // Audible
+    if (dnsDomainIs(host, ".audible.co.uk") || host === "audible.co.uk") {
+        return "DIRECT";
+    }
 
     //BBC
     if (dnsDomainIs(host, ".bbc.com") || host === "bbc.com") {
