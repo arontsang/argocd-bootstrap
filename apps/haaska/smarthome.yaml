@@ -16,6 +16,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: smarthome
+  annotations:
+    external-dns.kubernetes.io/hostname: "smarthome.arontsang.com"
 spec:
   ipFamilies:
    - IPv6
