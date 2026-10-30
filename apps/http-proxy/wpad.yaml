@@ -24,11 +24,11 @@ spec:
             app: uk-proxy
       containers:
         - name: wpad
-          image: public.ecr.aws/nginx/nginx:alpine-slim
+          image: ghcr.io/arontsang/container/lighttpd:241ec25
           ports:
-            - containerPort: 80
+            - containerPort: 8000
           volumeMounts:
-            - mountPath: /usr/share/nginx/html/wpad.dat
+            - mountPath: /opt/wwwroot/wpad.dat
               name: script
               subPath: wpad.js
           resources:
@@ -41,7 +41,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /wpad.dat
-              port: 80
+              port: 8000
       volumes:
        - name: script
          configMap:
@@ -58,7 +58,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 8000
       name: http
   selector:
     app: wpad
