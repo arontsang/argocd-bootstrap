@@ -31,7 +31,7 @@ metadata:
   name: uk-proxy
 spec:
   revisionHistoryLimit: 3
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: uk-proxy
