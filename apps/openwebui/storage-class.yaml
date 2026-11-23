@@ -8,10 +8,6 @@ parameters:
   storageAccount: arontsangkubestorage
   resourceGroup: kube-cluster
   containerName: openwebui
-  mountWithWorkloadIdentityToken: "true"
-  clientID: 128cf48a-5f8a-4b37-be09-842295bd0161
-  subscriptionID: 598f79fc-2275-42ab-b7e6-d9b7e5caae56
-
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 allowVolumeExpansion: true
