@@ -16,7 +16,9 @@ spec:
         workloadIdentity:
           clientID: "128cf48a-5f8a-4b37-be09-842295bd0161"
           tenantID: "4d0ec782-1b23-4888-ba2b-a2a62eba6abc"
-        
+        linux:
+          kubelet: /var/snap/microk8s/common/var/lib/kubelet
+ 
 
   destination:
     server: 'https://kubernetes.default.svc'
