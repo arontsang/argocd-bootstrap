@@ -2,8 +2,49 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: kube-system
 resources:
+  - ./azure-cloud-provider.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/blob-csi-driver/refs/heads/master/deploy/v1.27.9/csi-blob-controller.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/blob-csi-driver/refs/heads/master/deploy/v1.27.9/csi-blob-driver.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/blob-csi-driver/refs/heads/master/deploy/v1.27.9/csi-blob-node.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/blob-csi-driver/refs/heads/master/deploy/v1.27.9/rbac-csi-blob-controller.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/blob-csi-driver/refs/heads/master/deploy/v1.27.9/rbac-csi-blob-node.yaml
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: DaemonSet
+      metadata:
+        name: csi-blob-node
+        namespace: kube-system
+      spec:
+        template:
+          spec:
+            volumes:
+              # - name: azure-cred
+              #   $patch: delete
+              - name: azure-cred
+                $patch: replace
+                secret:
+                  secretName: azure-cloud-provider
+                  items:
+                  - key: cloud-config
+                    path: azure.json
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: csi-blob-controller
+        namespace: kube-system
+      spec:
+        template:
+          spec:
+            volumes:
+              # - name: azure-cred
+              #   $patch: delete
+              - name: azure-cred
+                $patch: replace
+                secret:
+                  secretName: azure-cloud-provider
+                  items:
+                  - key: cloud-config
+                    path: azure.json
+
