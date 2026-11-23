@@ -11,6 +11,6 @@ parameters:
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 allowVolumeExpansion: true
-mountOptions:
-  - -o allow_other
-  - --file-cache-timeout-in-seconds=120
+# mountOptions:
+#   - -o allow_other
+#   - --file-cache-timeout-in-seconds=120
