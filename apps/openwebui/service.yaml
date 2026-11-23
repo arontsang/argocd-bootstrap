@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: openwebui
 spec:
+  type: LoadBalancer
   selector:
     app: openwebui
   ports:
