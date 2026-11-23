@@ -20,9 +20,9 @@ spec:
               - key: kubernetes.io/hostname
                 operator: NotIn
                 values:
-                - proxmox
+               # - proxmox
                 - fake
-                - unraid-k8s
+               # - unraid-k8s
       containers:
         - name: openwebui
           image: ghcr.io/open-webui/open-webui:main
