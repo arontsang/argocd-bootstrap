@@ -4,5 +4,7 @@ namespace: openwebui
 resources:
   - namespace.yaml
   - database-secret.yaml
+  - storage-class.yaml
+  - pvc.yaml
   - deployment.yaml
   - service.yaml

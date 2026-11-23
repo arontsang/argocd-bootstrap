@@ -1,0 +1,16 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azureblob-fuse
+provisioner: blob.csi.azure.com
+parameters:
+  protocol: fuse2
+  storageAccount: arontsangkubestorage
+  resourceGroup: kube-cluster
+  containerName: openwebui
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+mountOptions:
+  - -o allow_other
+  - --file-cache-timeout-in-seconds=120
