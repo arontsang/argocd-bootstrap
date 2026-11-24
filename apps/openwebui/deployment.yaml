@@ -77,7 +77,7 @@ spec:
 
               while true; do
                   # Read the projected assertion on every exchange so Kubernetes can rotate it.
-                  if response=$(curl --silent --show-error --fail \
+                  if response=$(curl --silent --show-error --fail-with-body \
                       --connect-timeout 10 --max-time 30 \
                       --request POST \
                       --data-urlencode "client_id=$AZURE_CLIENT_ID" \
@@ -103,6 +103,13 @@ spec:
                           pause "$delay"
                           continue
                       fi
+                  else
+                      # Log only allowlisted error fields, never the assertion or response body.
+                      response=$(printf '%s' "$response" | tr -d '\r\n')
+                      error=$(printf '%s' "$response" | sed -nE 's/.*"error"[[:space:]]*:[[:space:]]*"([A-Za-z0-9_-]+)".*/\1/p')
+                      codes=$(printf '%s' "$response" | sed -nE 's/.*"error_codes"[[:space:]]*:[[:space:]]*\[([0-9,[:space:]]+)\].*/\1/p' | tr -d '[:space:]')
+                      echo "Azure token exchange error: ${error:-unknown}; AADSTS codes: ${codes:-unavailable}" >&2
+                      unset response error codes
                   fi
 
                   # Retain the last usable token during transient failures; never log credentials.
