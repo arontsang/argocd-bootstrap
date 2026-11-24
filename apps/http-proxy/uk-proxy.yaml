@@ -8,11 +8,11 @@ spec:
   ports:
     - protocol: TCP
       port: 3128
-      targetPort: 3128
+      targetPort: 13128
       name: http
     - protocol: TCP
       port: 1080
-      targetPort: 3128
+      targetPort: 13128
       name: http-2
     - protocol: TCP
       port: 8080
@@ -32,6 +32,8 @@ metadata:
 spec:
   revisionHistoryLimit: 3
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: uk-proxy
@@ -42,6 +44,7 @@ spec:
       labels:
         app: uk-proxy
     spec:
+      hostNetwork: true
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: "kubernetes.io/hostname"
@@ -81,7 +84,7 @@ spec:
           - name: SERVER_ADDR
             value: http://localhost:8080/
           - name: PROXY_PORT
-            value: "3128"
+            value: "13128"
           # 16 MB Send/Recv Window (Bandwidth latency product) 
           # should allow for 128Mb/s with a latency of 1 second
           - name: QUIC_SEND_WINDOW
@@ -96,7 +99,7 @@ spec:
         image: ghcr.io/arontsang/iroh-vpn-proxy/client:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 3128
+        - containerPort: 13128
       - name: caddy
         image: caddy:2-alpine
         ports:
