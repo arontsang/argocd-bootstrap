@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openwebui-caddy
+data:
+  Caddyfile: |
+    openwebui.arontsang.com {
+    	tls /secret/tls.crt /secret/tls.key
+    	reverse_proxy 127.0.0.1:8080
+    }
+
+    http://openwebui.arontsang.com {
+    	redir https://openwebui.arontsang.com{uri} permanent
+    }

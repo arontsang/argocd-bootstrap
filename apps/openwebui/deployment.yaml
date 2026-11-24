@@ -37,13 +37,35 @@ spec:
                   key: DATABASE_URL
             - name: DATA_DIR
               value: /app/backend/data
+            - name: AZURE_TOKEN_CREDENTIALS
+              value: WorkloadIdentityCredential
           ports:
-            - name: http
+            - name: web
               containerPort: 8080
           volumeMounts:
             - name: data
               mountPath: /app/backend/data
+        - name: caddy
+          image: caddy:2.10.2-alpine
+          ports:
+            - name: https
+              containerPort: 443
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: caddy-config
+              mountPath: /etc/caddy
+              readOnly: true
+            - name: tls
+              mountPath: /secret
+              readOnly: true
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: openwebui-data
+        - name: caddy-config
+          configMap:
+            name: openwebui-caddy
+        - name: tls
+          secret:
+            secretName: openwebui-tls
