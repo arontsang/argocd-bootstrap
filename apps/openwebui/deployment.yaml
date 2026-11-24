@@ -39,6 +39,8 @@ spec:
               value: /app/backend/data
             - name: AZURE_TOKEN_CREDENTIALS
               value: WorkloadIdentityCredential
+            - name: DATABASE_POOL_SIZE
+              value: "0"
           ports:
             - name: web
               containerPort: 8080
