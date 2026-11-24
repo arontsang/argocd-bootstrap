@@ -9,3 +9,9 @@ resources:
   - pvc.yaml
   - deployment.yaml
   - service.yaml
+
+configMapGenerator:
+  - name: azure-openai-sidecars
+    files:
+      - Caddyfile
+      - run-caddy.sh

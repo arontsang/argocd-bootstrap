@@ -1,0 +1,15 @@
+{
+	admin 127.0.0.1:2019
+	auto_https off
+	persist_config off
+}
+
+http://127.0.0.1:8081 {
+	bind 127.0.0.1
+	reverse_proxy https://friendly-riemann.openai.azure.com {
+		header_up Host friendly-riemann.openai.azure.com
+		header_up -api-key
+		header_up Authorization "Bearer {$AZURE_OPENAI_TOKEN}"
+		flush_interval -1
+	}
+}
