@@ -11,7 +11,9 @@ spec:
     metadata:
       labels:
         app: openwebui
+        azure.workload.identity/use: "true"
     spec:
+      serviceAccountName: openwebui
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

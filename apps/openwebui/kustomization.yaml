@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: openwebui
 resources:
   - namespace.yaml
+  - service-account.yaml
   - database-secret.yaml
   - storage-class.yaml
   - pvc.yaml
